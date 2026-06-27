@@ -1,0 +1,571 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROSKIEX v2.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Rajdhani',sans-serif;}
+:root{--accent:#00f2ff;--accent-glow:rgba(0,242,255,0.3);--accent-dark:rgba(0,242,255,0.1);}
+body{background:#050505;color:#e0e0e0;padding:20px;background-image:radial-gradient(circle at 30% 30%, var(--accent-dark) 0%, transparent 60%);}
+#loader{position:fixed;inset:0;background:#050505;display:flex;justify-content:center;align-items:center;font-size:2.8rem;font-weight:900;font-family:'Orbitron',sans-serif;color:var(--accent);z-index:9999;letter-spacing:5px;text-shadow:0 0 20px var(--accent-glow);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:35px;}
+.logo{fauont-size:1.8rem;font-weight:900;font-family:'Orbitron',sans-serif;background:linear-gradient(90deg,var(--accent),#00ffea);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;text-shadow:0 0 15px var(--accent-dark);}
+.section-title{color:var(--accent);margin:30px 0 18px;font-size:1.2rem;font-weight:700;font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase;}
+.tool-card{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#121212,#080808);padding:22px;border-radius:18px;margin-bottom:18px;border:1px solid #1f1f1f;transition: transform 0.08s ease, opacity 0.08s ease, border-color 0.3s, box-shadow 0.3s;cursor:pointer;box-shadow:0 0 0px rgba(0,242,255,0);-webkit-tap-highlight-color: transparent;touch-action: manipulation;user-select: none;}
+.tool-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 0 25px var(--accent-glow);}
+.tool-card:active{border-color:var(--accent);box-shadow:0 0 15px var(--accent-dark);}
+.tool-left h3{font-size:18px;margin-bottom:6px;font-weight:700;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.tool-left p{font-size:13px;color:#888;font-weight:600;}
+.arrow{font-size:32px;color:var(--accent);font-weight:300;text-shadow:0 0 10px var(--accent-glow);}
+.banner{background:linear-gradient(135deg,var(--accent-dark),#0a0a0a);padding:28px;border-radius:22px;margin-bottom:35px;border:1px solid var(--accent-glow);position:relative;overflow:hidden;text-align:center;}
+.banner::before{content:'';position:absolute;top:-50%;right:-50%;width:250px;height:250px;background:radial-gradient(circle,var(--accent-dark),transparent);border-radius:50%;animation:spin 20s linear infinite;}
+@keyframes spin{100%{transform:rotate(360deg)}}
+.banner h2{color:var(--accent);margin-bottom:6px;font-size:1.4rem;font-family:'Orbitron',sans-serif;letter-spacing:1.5px;}
+.banner p{color:#aaa;font-size:14px;font-weight:600;position:relative;margin-top:6px;}
+.menu-btn{font-size:32px;color:var(--accent);cursor:pointer;font-weight:700;-webkit-tap-highlight-color: transparent;}
+.sidebar{position:fixed;top:0;left:-280px;width:270px;height:100%;background:#070707;padding-top:80px;transition:.4s;z-index:999;border-right:1px solid var(--accent-dark);}
+.sidebar.active{left:0;}
+.sidebar a{display:block;padding:20px 30px;color:#ddd;text-decoration:none;border-bottom:1px solid #151515;font-weight:600;font-size:15px;transition:.3s;letter-spacing:1px;-webkit-tap-highlight-color: transparent;}
+.sidebar a:hover{background:#111;color:var(--accent);padding-left:38px;text-shadow:0 0 8px var(--accent-glow);}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:none;z-index:998;backdrop-filter:blur(6px);}
+.overlay.active{display:block;}
+.back-btn{margin-top:25px;padding:15px 26px;background:#0a0a0a;border:1px solid var(--accent);border-radius:12px;color:var(--accent);cursor:pointer;font-size:14px;font-weight:700;font-family:'Orbitron',sans-serif;letter-spacing:1px;transition:.3s;-webkit-tap-highlight-color: transparent;}
+.back-btn:hover{background:var(--accent-dark);box-shadow:0 0 15px var(--accent-glow);}
+.back-btn:active{transform:scale(0.97);opacity:0.85;}
+.file-modal{display:none;position:fixed;z-index:10000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(12px);}
+.file-content{background:linear-gradient(135deg,#0f0f0f,#050505);padding:32px;border-radius:22px;border:1px solid var(--accent-glow);width:100%;max-width:460px;color:#FFF;max-height:85vh;overflow-y:auto;box-shadow:0 0 40px var(--accent-glow);}
+.file-content h3{color:var(--accent);margin:0 0 12px 0;text-align:center;font-size:24px;font-weight:900;font-family:'Orbitron',sans-serif;letter-spacing:2px;text-shadow:0 0 12px var(--accent-glow);}
+.file-content h4{color:var(--accent);font-size:15px;margin:22px 0 12px 0;font-weight:700;font-family:'Orbitron',sans-serif;border-bottom:2px solid #1a1a1a;padding-bottom:8px;letter-spacing:1px;}
+.warning{color:#ff4d4d;text-align:center;font-size:13px;margin-bottom:22px;font-weight:700;letter-spacing:1px;}
+.file-row{display:flex;flex-direction:column;gap:8px;margin:12px 0;padding-bottom:18px;border-bottom:1px solid #151515;}
+.file-row-top{display:flex;gap:12px;align-items:center;}
+.file-name{flex:1;background:#070707;border:1px solid #222;color:#00ffcc;padding:16px;border-radius:12px;text-align:left;font-family:'Orbitron',monospace;font-size:16px;font-weight:700;letter-spacing:1px;-webkit-tap-highlight-color: transparent;}
+.download-btn{background:linear-gradient(135deg,var(--accent),#00d4ff);border:none;color:#000;padding:16px 20px;border-radius:12px;font-size:13px;font-weight:900;font-family:'Orbitron',sans-serif;cursor:pointer;white-space:nowrap;transition:.3s;letter-spacing:1px;box-shadow:0 0 15px var(--accent-glow);text-decoration:none;-webkit-tap-highlight-color: transparent;}
+.download-btn:hover{transform:scale(1.05);box-shadow:0 0 25px var(--accent-glow);}
+.download-btn:active{transform:scale(0.96);opacity:0.9;}
+.close-popup{margin-top:25px;width:100%;padding:17px;background:linear-gradient(135deg,var(--accent),#00d4ff);border:none;border-radius:14px;color:#000;cursor:pointer;font-weight:900;font-size:15px;font-family:'Orbitron',sans-serif;letter-spacing:1.5px;transition:.3s;-webkit-tap-highlight-color: transparent;}
+.close-popup:hover{box-shadow:0 0 25px var(--accent-glow);transform:scale(1.02);}
+.close-popup:active{transform:scale(0.98);opacity:0.9;}
+.toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),#00d4ff);color:#000;padding:14px 28px;border-radius:12px;display:none;font-weight:800;z-index:10001;font-size:14px;font-family:'Orbitron',sans-serif;box-shadow:0 0 30px var(--accent-glow);letter-spacing:1px;}
+.rating-box{display:flex;align-items:center;gap:10px;margin-top:6px;}
+.rating-label{font-size:12px;color:#777;font-weight:600;}
+.stars{display:flex;gap:5px;}
+.star{font-size:22px;color:#2a2a2a;cursor:pointer;transition:0.2s;user-select:none;-webkit-tap-highlight-color: transparent;}
+.star:hover,.star.active{color:var(--accent);transform:scale(1.25);text-shadow:0 0 10px var(--accent-glow);}
+.rating-count{font-size:11px;color:#555;margin-left:5px;font-weight:700;}
+.channel-btn{display:inline-block;margin-top:15px;padding:14px 28px;background:linear-gradient(135deg,#ff3333,#ff0066);color:#fff;text-decoration:none;border-radius:12px;font-weight:900;font-family:'Orbitron',sans-serif;letter-spacing:1.5px;box-shadow:0 0 20px #ff333360;transition:.3s;-webkit-tap-highlight-color: transparent;}
+.channel-btn:hover{transform:scale(1.05);box-shadow:0 0 30px #ff006680;}
+.channel-btn:active{transform:scale(0.98);opacity:0.9;}
+</style></head>
+<body>
+
+<div id="loader">LOF v2.1</div>
+
+<div class="sidebar" id="sidebar">
+  <a href="#" onclick="toggleMenu()">✖ CLOSE</a>
+  <a href="#" onclick="showPage('about-page')">ℹ️ ABOUT</a>
+  <a href="#" onclick="showPage('contact-page')">📞 CONTACT</a>
+  <a href="#" onclick="showPage('announcements-page')">🔔 UPDATES</a>
+  <a href="#" onclick="showSettings()">⚙️ SETTINGS</a>
+  <a href="#" onclick="showPage('developers-page')">👨‍💻 DEVELOPERS</a>
+</div>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div id="home-page">
+<div class="header">
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+<div class="logo">LOF v2.1</div>
+</div>
+
+<div class="banner">
+<h2 id="bannerTitle">LOF v2.1 LATEST</h2>
+<p>Fresh UI • New Files Added • Allnet plugs • bypass plugs. Tap a category below.</p>
+</div>
+
+<h2 class="section-title">CONFIG CATEGORIES</h2>
+
+<div class="tool-card" onclick="showHcPopup()"><div class="tool-left"><h3>HC FILES</h3><p>HTTP CUSTOM • PORT 443/80</p></div><div class="arrow">›</div></div>
+<div class="tool-card" onclick="showHatPopup()"><div class="tool-left"><h3>HAT FILES</h3><p>HA TUNNEL PLUS • 443/80</p></div><div class="arrow">›</div></div>
+<div class="tool-card" onclick="showTlsPopup()"><div class="tool-left"><h3>TLS FILES</h3><p>TLS TUNNEL</p></div><div class="arrow">›</div></div>
+<div class="tool-card" onclick="showNpvtPopup()"><div class="tool-left"><h3>NPVT & BDNET FILES</h3><p>NAPSTERNETV • V2RAY</p></div><div class="arrow">›</div></div>
+
+</div>
+
+<!-- HC FILES Popup -->
+<div id="hcPopup" class="file-modal">
+  <div class="file-content">
+    <h3> HC FILES</h3>
+    <p class="warning">HTTP CUSTOM • UPDATE FILES BELOW</p>
+    <h4>📱 MTN NETWORK</h4>
+    <div class="file-row" data-file="mtn-limited-hc1"><div class="file-row-top"><button class="file-name">MTN LIMITED.hc</button><a href="https://www.mediafire.com/file/8pgp6nttcsa45fd/MTN_LIMITED%25F0%259F%259A%25B8%25F0%259F%2594%25A5%25F0%259F%2587%25BF%25F0%259F%2587%25A6.hc/file" class="download-btn" download="MTN_LIMITED.hc" onclick="autoDownload(this.href, 'MTN_LIMITED.hc'); return false;">DOWNLOAD</a></div><div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="mtn-limited-hc1"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div></div>
+    <div class="file-row" data-file="mtn-500mb-hc"><div class="file-row-top"><button class="file-name">MTN LIMITED².hc</button><a href="https://www.mediafire.com/file/vbuuaedxm6zmbv9/MTN_DIFFERENT_LIMIT%25F0%259F%2594%25A5%25F0%259F%2587%25BF%25F0%259F%2587%25A6.hc/file" class="download-btn" download="MTN_DIFFERENT_LIMIT.hc" onclick="autoDownload(this.href, 'MTN_DIFFERENT_LIMIT.hc'); return false;">DOWNLOAD</a></div><div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="mtn-500mb-hc"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div></div>
+    <h4>📱 VODACOM NETWORK</h4>
+    <div class="file-row" data-file="voda-unli-hc"><div class="file-row-top"><button class="file-name">VODA UNLIMIT.hc</button><a href="https://www.mediafire.com/file/nssx216sfnaj6ir/VODACOM_UNLIMITED_UDP%25F0%259F%2587%25BF%25F0%259F%2587%25A6%25F0%259F%2594%25A5.hc/file" class="download-btn" download="VODACOM_UNLIMITED_UDP.hc" onclick="autoDownload(this.href, 'VODACOM_UNLIMITED_UDP.hc'); return false;">DOWNLOAD</a></div><div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="voda-unli-hc"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div></div>
+    <button class="close-popup" onclick="closeHcPopup()">CLOSE</button>
+  </div>
+</div>
+
+<!-- HAT FILES Popup -->
+<div id="hatPopup" class="file-modal">
+  <div class="file-content">
+    <h3> HAT FILES</h3>
+    <p class="warning">HA TUNNEL PLUS • 3/3 FILES</p>
+    <h4>📱 MTN NETWORK</h4>
+    <div class="file-row" data-file="mtn-500mb-hat"><div class="file-row-top"><button class="file-name">TIKTOK BYPASS.hat</button><a href="https://www.mediafire.com/file/74xssbn6jjowmha/TIKTOK+BYPASS%E2%98%98%EF%B8%8F%F0%9F%94%A5%F0%9F%87%BF%F0%9F%87%A6.hat/file" class="download-btn" download="TIKTOK_BYPASS.hat" onclick="autoDownload(this.href, 'TIKTOK_BYPASS.hat'); return false;">DOWNLOAD</a></div><div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="mtn-500mb-hat"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div></div>
+    <div class="file-row" data-file="mtn-limited-hat"><div class="file-row-top"><button class="file-name">MTN LIMITED.hat</button><a href="https://www.mediafire.com/file/17iqhtl7sjc1hlx/MTN+LIMITED🔥🇿🇦.hat/file" class="download-btn" download="MTN LIMITED.hat" onclick="autoDownload(this.href, 'FACEBOOK_BYPASS.hat'); return false;">DOWNLOAD</a></div><div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="mtn-limited-hat"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div></div>
+    <div class="file-row" data-file="mtn-udp-hat"><div class="file-row-top"><button class="file-name">MTN LOCATION BASED.hat</button><a href="https://www.mediafire.com/file/17iqhtl7sjc1hlx/MTN+LIMITED🔥🇿🇦.hat/file" class="download-btn" download="MTN LOCATION.hat" onclick="autoDownload(this.href, 'WHATSAPP_BYPASS.hat'); return false;">DOWNLOAD</a></div><div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="mtn-udp-hat"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div></div>
+    <button class="close-popup" onclick="closeHatPopup()">CLOSE</button>
+  </div>
+</div>
+
+<!-- TLS FILES Popup -->
+<div id="tlsPopup" class="file-modal">
+  <div class="file-content">
+    <h3> TLS FILES</h3>
+    <p class="warning">TLS TUNNEL • 3/3 FILES</p>
+    <h4>ALLNET TIKTOK BYPASS</h4>
+    <div class="file-row" data-file="mtn-limited-tls">
+      <div class="file-row-top">
+        <button class="file-name">TIKTOK BYPASS.tls</button>
+        <a href="https://www.mediafire.com/file/6c23xhj5l5rybnj/TIKTOK_BYPASS%25F0%259F%2587%25BF%25F0%259F%2587%25A6%25F0%259F%2594%25A5.tls/file" class="download-btn">DOWNLOADK</a>
+      </div>
+      <div class="rating-box">
+        <span class="rating-label">Rate:</span>
+        <div class="stars" data-file="mtn-limited-tls">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <span class="rating-count">0</span>
+      </div>
+    </div>
+    <div class="file-row" data-file="mtn-500mb-tls">
+      <div class="file-row-top">
+        <button class="file-name">TWITTER BYPASS.tls</button>
+        <a href="https://www.mediafire.com/file/13k84ojmi6np3pw/YOUTUBE+BYPASS🇿🇦🔥.tls/file" class="download-btn" download="WHATSAPP_BYPASS.tls" onclick="autoDownload(this.href, 'WHATSAPP_BYPASS.tls'); return false;">DOWNLOAD</a></div><div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="mtn-500mb-tls"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div></div>
+    <div class="file-row" data-file="mtn-sni-tls">
+      <div class="file-row-top">
+        <button class="file-name">FACEBOOK BYPASS.tls</button>
+        <a href="https://www.mediafire.com/file/er1s7rb9wiklwym/FACEBOOK_BYPASS%25F0%259F%2587%25BF%25F0%259F%2587%25A6%25F0%259F%2594%25A5.tls/file" class="download-btn" download="FACEBOOK_BYPASS.tls" onclick="autoDownload(this.href, 'FACEBOOK_BYPASS.tls'); return false;">DOWNLOAD</a>
+      </div>
+      <div class="rating-box">
+        <span class="rating-label">Rate:</span>
+        <div class="stars" data-file="mtn-sni-tls">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <span class="rating-count">0</span>
+      </div>
+    </div>
+    <button class="close-popup" onclick="closeTlsPopup()">CLOSE</button>
+  </div>
+</div>
+
+<!-- NPVT FILES Popup -->
+<div id="npvtPopup" class="file-modal">
+  <div class="file-content">
+    <h3> NPVT & BDNET FILES</h3>
+    <p class="warning">NPVT • 3/3 FILES</p>
+    
+    <h4>📱 MTN NETWORK</h4>
+    <div class="file-row" data-file="mtn-500mb-npvt">
+      <div class="file-row-top">
+        <button class="file-name">MTN STABLE.npvt</button>
+        <a href="https://www.mediafire.com/file/p83pemhwsp2902j/LEGENDS_OF_FREENET.npvt/file" class="download-btn" download="MTN_500MB.npvt" onclick="autoDownload(this.href, 'MTN_500MB.npvt'); return false;">DOWNLOAD</a>
+      </div>
+      <div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="mtn-500mb-npvt"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div>
+    </div>
+    
+    <div class="file-row" data-file="mtn-limited-npvt">
+      <div class="file-row-top">
+        <button class="file-name">MTN LIMITED.npvt</button>
+        <a href="https://www.mediafire.com/file/p83pemhwsp2902j/LEGENDS_OF_FREENET.npvt/file" class="download-btn" download="MTN_LIMITED.npvt" onclick="autoDownload(this.href, 'MTN_LIMITED.npvt'); return false;">DOWNLOAD</a>
+      </div>
+      <div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="mtn-limited-npvt"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div>
+    </div>
+
+    <div class="file-row" data-file="mtn-v2ray-npvt">
+      <div class="file-row-top">
+        <button class="file-name">MTN V2RAY.npvt</button>
+        <a href="https://www.mediafire.com/file/p83pemhwsp2902j/LEGENDS_OF_FREENET.npvt/file" class="download-btn" download="MTN_V2RAY.npvt" onclick="autoDownload(this.href, 'MTN_V2RAY.npvt'); return false;">DOWNLOAD</a>
+      </div>
+      <div class="rating-box">
+        <span class="rating-label">Rate:</span>
+        <div class="stars" data-file="mtn-v2ray-npvt">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <span class="rating-count">0</span>
+      </div>
+    </div>
+
+    <p class="warning" style="margin-top:25px;">BDNET • 3/3 FILES</p>
+
+    <h4>🌐 BNET NETWORK</h4>
+    <div class="file-row" data-file="Vodacom-bdnet">
+      <div class="file-row-top">
+        <button class="file-name">VODA.bdnet</button>
+        <a href="https://www.mediafire.com/file/mry4mebbiefkjhu/VODACOM_UNLIMITED_BY_LOF_%25F0%259F%2587%25BB%25F0%259F%2587%25AE.bdnet/file" class="download-btn" download="BNET_500MB.bdnet" onclick="autoDownload(this.href, 'BNET_500MB.bdnet'); return false;">DOWNLOAD</a>
+      </div>
+      <div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="bnet-500mb-npvt"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div>
+    </div>
+    
+    <div class="file-row" data-file="bnet-limited-bdnet">
+      <div class="file-row-top">
+        <button class="file-name">VODA.bdnet</button>
+        <a href="https://www.mediafire.com/file/mry4mebbiefkjhu/VODACOM_UNLIMITED_BY_LOF_%25F0%259F%2587%25BB%25F0%259F%2587%25AE.bdnet/file" class="download-btn" download="BNET_LIMITED.bdnet" onclick="autoDownload(this.href, 'BNET_LIMITED.npvt'); return false;">DOWNLOAD</a>
+      </div>
+      <div class="rating-box"><span class="rating-label">Rate:</span><div class="stars" data-file="bnet-limited-npvt"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div><span class="rating-count">0</span></div>
+    </div>
+
+    <div class="file-row" data-file="bnet-v2ray-bdnet">
+      <div class="file-row-top">
+        <button class="file-name">VODA.bdnet</button>
+        <a href="https://www.mediafire.com/file/mry4mebbiefkjhu/VODACOM_UNLIMITED_BY_LOF_%25F0%259F%2587%25BB%25F0%259F%2587%25AE.bdnet/file" class="download-btn" download="BNET_V2RAY.npvt" onclick="autoDownload(this.href, 'BNET_V2RAY.npvt'); return false;">DOWNLOAD</a>
+      </div>
+      <div class="rating-box">
+        <span class="rating-label">Rate:</span>
+        <div class="stars" data-file="bnet-v2ray-npvt">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <span class="rating-count">0</span>
+      </div>
+    </div>
+
+    <button class="close-popup" onclick="closeNpvtPopup()">CLOSE</button>
+  </div>
+</div>
+
+<div id="about-page" style="display:none;">
+<h2 class="section-title">ℹ️ ABOUT</h2>
+<div class="banner" style="text-align:center;">
+
+  <h2 style="font-family:'Orbitron',sans-serif;color:var(--accent);font-size:26px;margin-bottom:10px;text-shadow:0 0 15px var(--accent-glow);">🚀 LOF FILES</h2>
+  <p style="font-size:14px;color:#aaa;margin-bottom:20px;">Fresh update with cyber UI v2.1</p>
+
+  <h4 style="color:var(--accent);margin-top:20px;margin-bottom:12px;font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:2px;">📋 v2.1 CHANGELOG</h4>
+  <div style="text-align:left;max-width:350px;margin:0 auto;font-size:13px;color:#ccc;line-height:1.9;margin-bottom:25px;">
+    <p>✅ <b>Custom accent colors</b> - 6 colors in Settings</p>
+    <p>✅ <b>App-style tiles</b> + haptic feedback</p> 
+    <p>✅ <b>Auto-download</b> for APK + configs</p>
+    <p>✅ <b>Developers tab</b> added to menu</p>
+  </div>
+
+  <p style="font-size:12px;color:#666;font-family:'Orbitron',sans-serif;letter-spacing:1px;border-top:1px solid var(--accent-dark);padding-top:15px;">
+    MADE FOR LOF COMMUNITY ❣
+  </p>
+
+  <a href="#" onclick="showPage('home-page')" style="display:inline-block;padding:12px 28px;border:2px solid var(--accent);border-radius:12px;color:var(--accent);font-family:'Orbitron',sans-serif;font-weight:700;text-decoration:none;box-shadow:0 0 15px var(--accent-glow);margin-top:15px;">← BACK</a>
+</div>
+</div>
+
+<div id="developers-page" style="display:none;">
+<h2 class="section-title">👨‍💻 DEVELOPERS</h2>
+<div class="banner" style="text-align:center;">
+
+  <img src="https://iili.io/CRBMzSR.jpg" alt="Dev" style="width:120px;height:120px;border-radius:50%;border:3px solid var(--accent);box-shadow:0 0 25px var(--accent-glow);margin:15px auto;display:block;object-fit:cover;">
+  <p style="font-family:'Orbitron',sans-serif;color:var(--accent);font-size:16px;margin-bottom:5px;">DEVELOPER</p>
+  <p style="margin-bottom:25px;">╰༄ᴀʙᴜᴛɪᴇʏ᭄ᴍᴀʜᴀᴘᴘᴇɴ࿐╮ ☜ ❣</p>
+
+  <img src="https://iili.io/CRB36Dg.jpg" alt="Co Dev" style="width:120px;height:120px;border-radius:50%;border:3px solid var(--accent);box-shadow:0 0 25px var(--accent-glow);margin:15px auto;display:block;object-fit:cover;opacity:0.9;">
+  <p style="font-family:'Orbitron',sans-serif;color:var(--accent);font-size:16px;margin-bottom:5px;">CO DEV</p>
+  <p style="margin-bottom:25px;">╰༄ᴍʀᴅɪᴇʜᴀʀᴅ࿐╮</p>
+
+  <a href="#" onclick="showPage('home-page')" style="display:inline-block;padding:12px 28px;border:2px solid var(--accent);border-radius:12px;color:var(--accent);font-family:'Orbitron',sans-serif;font-weight:700;text-decoration:none;box-shadow:0 0 15px var(--accent-glow);margin-top:10px;">← BACK</a>
+</div>
+</div>
+
+<div id="contact-page" style="display:none;">
+<h2 class="section-title">📞 CONTACT</h2>
+<div class="tool-card" onclick="window.open('https://wa.me/27687085163', '_blank')"><div class="tool-left"><h3> APK ISSUES? CONTACT DEVELOPER</h3><p>TAP TO CHAT</p></div><div class="arrow">›</div></div>
+<button class="back-btn" onclick="showPage('home-page')">← BACK</button>
+</div>
+
+<div id="announcements-page" style="display:none;">
+<h2 class="section-title">🔔 UPDATES</h2>
+<div class="banner">
+<p>Latest: v2.1</p>
+<p>3/3 Files added to HAT, TLS, NPVT</p>
+<p>Auto-download system active</p>
+<a id="channelBtn" href="https://whatsapp.com/channel/0029VbD5Xzk002TFQ39LFW2t" target="_blank" class="channel-btn">📢 JOIN CHANNEL</a>
+</div>
+<button class="back-btn" onclick="showPage('home-page')">← BACK</button>
+</div>
+
+<div id="toast" class="toast">Link copied!</div>
+
+<!-- SETTINGS Popup -->
+<div id="settingsPopup" class="file-modal">
+  <div class="file-content">
+    <h3>⚙️ SETTINGS</h3>
+    <p class="warning">CUSTOMIZE LOF v2.1</p>
+    <h4>🎨 APPEARANCE</h4>
+    <div class="file-row">
+      <div class="file-row-top">
+        <button class="file-name">Dark Mode</button>
+        <button id="themeToggle" class="download-btn" onclick="toggleTheme()">ON</button>
+      </div>
+    </div>
+    <h4>🎨 ACCENT COLOR</h4>
+<div class="file-row">
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;width:100%">
+    <button onclick="setAccent('#00f2ff')" style="height:45px;border-radius:12px;border:2px solid #222;background:#00f2ff;cursor:pointer"></button>
+    <button onclick="setAccent('#00ff88')" style="height:45px;border-radius:12px;border:2px solid #222;background:#00ff88;cursor:pointer"></button>
+    <button onclick="setAccent('#ff00ff')" style="height:45px;border-radius:12px;border:2px solid #222;background:#ff00ff;cursor:pointer"></button>
+    <button onclick="setAccent('#ff9500')" style="height:45px;border-radius:12px;border:2px solid #222;background:#ff9500;cursor:pointer"></button>
+    <button onclick="setAccent('#ff3333')" style="height:45px;border-radius:12px;border:2px solid #222;background:#ff3333;cursor:pointer"></button>
+    <button onclick="setAccent('#8a2be2')" style="height:45px;border-radius:12px;border:2px solid #222;background:#8a2be2;cursor:pointer"></button>
+  </div>
+</div>
+    <h4>📳 HAPTICS</h4>
+    <div class="file-row">
+      <div class="file-row-top">
+        <button class="file-name">Tile Vibration</button>
+        <button id="hapticToggle" class="download-btn" onclick="toggleHaptic()">ON</button>
+      </div>
+    </div>
+    <h4>🗑️ DATA</h4>
+    <div class="file-row">
+      <div class="file-row-top">
+        <button class="file-name">Reset All Ratings</button>
+        <button class="download-btn" style="background:linear-gradient(135deg,#ff3333,#ff0066)" onclick="resetRatings()">CLEAR</button>
+      </div>
+    </div>
+    <button class="close-popup" onclick="closeSettings()">CLOSE</button>
+  </div>
+</div>
+
+<!-- CUSTOM UPDATE POPUP -->
+<div id="updatePopup" class="file-modal">
+  <div class="file-content">
+    <h3>🔄 UPDATE AVAILABLE</h3>
+    <p class="warning" id="updateVersion">v2.1</p>
+    <h4>📋 WHAT'S NEW</h4>
+    <p id="updateChangelog" style="color:#aaa;font-size:14px;line-height:1.6;text-align:center;margin:15px 0;">
+      New configs + bug fixes
+    </p>
+    <div style="display:flex;gap:12px;margin-top:25px">
+      <button id="laterBtn" class="close-popup" style="flex:1;background:#222;color:#aaa;border:1px solid #333" onclick="closeUpdatePopup()">LATER</button>
+      <button class="download-btn" style="flex:1" onclick="downloadUpdate()">DOWNLOAD</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// === UPDATE SYSTEM CONFIG ===
+const CURRENT_VERSION = "2.1"; 
+const CURRENT_VERSION_CODE = 3; // v2.1
+const UPDATE_API_URL = "https://raw.githubusercontent.com/abutieymahappen/lofupdates/main/version.json";
+let updateData = null;
+
+window.onload=()=>{
+setTimeout(()=>{document.getElementById("loader").style.display="none";},1200);
+checkUpdate(); // UPDATE CHECKER
+loadRatings();
+loadTheme();
+
+// Apply accent on load
+const accentColor = localStorage.getItem('lof_accent') || '#00f2ff';
+document.documentElement.style.setProperty('--accent', accentColor);
+document.documentElement.style.setProperty('--accent-glow', hexToRgba(accentColor, 0.3));
+document.documentElement.style.setProperty('--accent-dark', hexToRgba(accentColor, 0.1));
+
+/* APP-STYLE TAP EFFECT FOR TILES */
+document.querySelectorAll('.tool-card').forEach(tile => {
+  const pressIn = () => {
+    tile.style.transform = 'scale(0.97)';
+    tile.style.opacity = '0.85';
+    if (hapticEnabled && navigator.vibrate) navigator.vibrate(8);
+  };
+  const pressOut = () => {
+    tile.style.transform = 'scale(1)';
+    tile.style.opacity = '1';
+  };
+  tile.addEventListener('touchstart', pressIn, {passive:true});
+  tile.addEventListener('touchend', pressOut);
+  tile.addEventListener('touchcancel', pressOut);
+  tile.addEventListener('mousedown', pressIn);
+  tile.addEventListener('mouseup', pressOut);
+  tile.addEventListener('mouseleave', pressOut);
+});
+};
+
+function toggleMenu(){
+document.getElementById("sidebar").classList.toggle("active");
+document.getElementById("overlay").classList.toggle("active");
+}
+
+function showPage(pageId){
+const pages=["home-page","about-page","contact-page","announcements-page"];
+pages.forEach(id=>{document.getElementById(id).style.display="none";});
+document.getElementById(pageId).style.display="block";
+toggleMenu();
+}
+
+function showHcPopup() {document.getElementById('hcPopup').style.display = 'flex'; loadRatings();}
+function closeHcPopup() {document.getElementById('hcPopup').style.display = 'none';}
+function showHatPopup() {document.getElementById('hatPopup').style.display = 'flex'; loadRatings();}
+function closeHatPopup() {document.getElementById('hatPopup').style.display = 'none';}
+function showTlsPopup() {document.getElementById('tlsPopup').style.display = 'flex'; loadRatings();}
+function closeTlsPopup() {document.getElementById('tlsPopup').style.display = 'none';}
+function showNpvtPopup() {document.getElementById('npvtPopup').style.display = 'flex'; loadRatings();}
+function closeNpvtPopup() {document.getElementById('npvtPopup').style.display = 'none';}
+function showSettings() {
+  document.getElementById('settingsPopup').style.display = 'flex';
+  document.getElementById('hapticToggle').innerText = hapticEnabled? 'ON' : 'OFF';
+  document.getElementById('themeToggle').innerText = darkMode? 'ON' : 'OFF';
+  toggleMenu();
+}
+function closeSettings() {
+  document.getElementById('settingsPopup').style.display = 'none';
+}
+
+document.querySelectorAll('.file-modal').forEach(modal => {
+  modal.addEventListener('click', function(e) {
+    if(e.target === this) this.style.display = 'none';
+  });
+});
+
+// RATING SYSTEM
+function loadRatings(){
+  document.querySelectorAll('.stars').forEach(starBox=>{
+    const fileId = starBox.dataset.file;
+    if(!fileId) return;
+    const saved = JSON.parse(localStorage.getItem('lof_ratings') || '{}');
+    const rating = saved[fileId] || 0;
+    updateStars(starBox, rating);
+    starBox.querySelectorAll('.star').forEach((star, i)=>{
+      star.onclick = ()=>{
+        const newRating = i+1;
+        saved[fileId] = newRating;
+        localStorage.setItem('lof_ratings', JSON.stringify(saved));
+        updateStars(starBox, newRating);
+        showToast(`Rated ${newRating}★`);
+      }
+    });
+  });
+}
+function updateStars(starBox, rating){
+  const stars = starBox.querySelectorAll('.star');
+  stars.forEach((s, i)=> s.classList.toggle('active', i < rating));
+  const countEl = starBox.parentElement.querySelector('.rating-count');
+  if(countEl) countEl.textContent = rating > 0? rating+'★' : '0';
+}
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.innerText = msg;
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 1200);
+}
+
+let hapticEnabled = localStorage.getItem('lof_haptic')!== 'false';
+let darkMode = localStorage.getItem('lof_theme')!== 'light';
+
+function toggleHaptic() {
+  hapticEnabled =!hapticEnabled;
+  localStorage.setItem('lof_haptic', hapticEnabled);
+  document.getElementById('hapticToggle').innerText = hapticEnabled? 'ON' : 'OFF';
+  showToast(hapticEnabled? 'Haptics ON' : 'Haptics OFF');
+}
+
+function toggleTheme() {
+  darkMode =!darkMode;
+  localStorage.setItem('lof_theme', darkMode? 'dark' : 'light');
+  document.body.style.background = darkMode? '#050505' : '#f0f0f0';
+  document.body.style.color = darkMode? '#e0e0e0' : '#111';
+  document.getElementById('themeToggle').innerText = darkMode? 'ON' : 'OFF';
+  showToast(darkMode? 'Dark Mode ON' : 'Light Mode ON');
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem('lof_theme') || 'dark';
+  darkMode = saved === 'dark';
+  document.body.style.background = darkMode? '#050505' : '#f0f0f0';
+  document.body.style.color = darkMode? '#e0e0e0' : '#111';
+}
+
+function resetRatings() {
+  localStorage.removeItem('lof_ratings');
+  showToast('Ratings cleared!');
+  setTimeout(() => location.reload(), 800);
+}
+
+function setAccent(color) {
+  localStorage.setItem('lof_accent', color);
+  document.documentElement.style.setProperty('--accent', color);
+  document.documentElement.style.setProperty('--accent-glow', hexToRgba(color, 0.3));
+  document.documentElement.style.setProperty('--accent-dark', hexToRgba(color, 0.1));
+  showToast('Color updated!');
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// AUTO DOWNLOAD FOR CONFIG FILES + APK
+function autoDownload(url, filename) {
+  showToast('Opening browser...');
+  
+  // Skip WebView download manager completely
+  setTimeout(() => {
+    if(typeof Android !== 'undefined' && Android.openURL) {
+      Android.openURL(url); // Web2APK method
+    } else if(typeof web2apk !== 'undefined') {
+      web2apk.openExternal(url); // WebToApp method
+    } else {
+      window.open(url, '_system'); // Cordova/others
+    }
+  }, 300);
+}
+
+// CUSTOM UPDATE CHECKER - NO COUNTDOWN
+async function checkUpdate() {
+  try {
+    const res = await fetch(UPDATE_API_URL + '?t=' + Date.now(), {cache: 'no-store'});
+    if(!res.ok) throw new Error('Network error');
+    const data = await res.json();
+
+    if (data.version_code > CURRENT_VERSION_CODE) {
+      updateData = data;
+      document.getElementById('updateVersion').innerText = 'v' + data.version;
+      document.getElementById('updateChangelog').innerText = data.changelog;
+      document.getElementById('updatePopup').style.display = 'flex';
+
+      if (data.force_update === true) {
+        document.getElementById('laterBtn').style.display = 'none';
+      } else {
+        document.getElementById('laterBtn').style.display = 'block';
+      }
+    } else {
+      console.log("App is up to date v" + CURRENT_VERSION);
+    }
+  } catch(e) {
+    console.log("Update check failed:", e.message);
+  }
+}
+
+function closeUpdatePopup() {
+  document.getElementById('updatePopup').style.display = 'none';
+}
+
+function downloadUpdate() {
+  if(updateData) {
+    closeUpdatePopup();
+    showToast('Opening browser...');
+    setTimeout(() => {
+      window.open(updateData.update_url, '_system');
+    }, 300);
+  }
+}
+function toggleMenu(){
+  document.getElementById('sidebar').classList.toggle('active');
+  document.getElementById('overlay').classList.toggle('active');
+}
+function showPage(id){
+  document.querySelectorAll('body > div[id$="-page"]').forEach(p=>p.style.display='none');
+  document.getElementById(id).style.display='block';
+  toggleMenu(); // closes sidebar after clicking
+}
+</script></body>
+</html>
