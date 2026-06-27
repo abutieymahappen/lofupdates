@@ -1,7 +1,7 @@
 {
-  "version": "2.0",
-  "version_code": 2,
-  "changelog": "v2.0 Build 2\n- Configs updated\n- UI improvements\n- Auto-update system\n- Performance fixes",
-  "update_url": "https://github.com/abutieymahappen/lofupdates/releases/download/v2.0/LOF_CONFIGS.apk",
+  "version": "2.1",
+  "version_code": 3,
+  "changelog": "v2.1\n- Bug fixes from v2.0\n- New configs added\n- Stability improvements\n- Auto-update patches",
+  "update_url": "https://github.com/abutieymahappen/lofupdates/releases/download/v2.1/LOF.CONFIGS_v2.1.apk",
   "force_update": false
 }
